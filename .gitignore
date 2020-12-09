@@ -1,0 +1,4 @@
+/venv/
+/accounts/migrations/
+/db.sqlite3
+/.idea
