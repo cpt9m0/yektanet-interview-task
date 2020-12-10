@@ -5,6 +5,8 @@ from rest_framework.permissions import IsAdminUser, AllowAny
 from accounts.models import User
 from accounts.serializers import UserSerializer
 
+# TODO: CRUD User
+
 
 class UserList(generics.ListAPIView):
     """
@@ -24,14 +26,5 @@ class UserRegister(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
-    def get(self, *args, **kwargs):
-        """
-        endpoint: /api/v1/accounts/user/
-        :return: Response object includes authenticated user info or 401 message
-        """
-        if self.request.user.is_authenticated:
-            return Response(
-                data=UserSerializer(instance=self.request.user).data
-            )
-        else:
-            return Response({'detail': 'User is not authenticated.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+# TODO: CRUD Profile

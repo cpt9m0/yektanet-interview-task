@@ -8,6 +8,8 @@ from accounts.managers import UserManager
 
 class User(AbstractUser):
     username = None
+    first_name = None
+    last_name = None
     email = models.EmailField(_('email address'), blank=False, null=False, unique=True)
     is_employer = models.BooleanField(_('employer'), blank=False, null=False, default=False)
 
@@ -26,6 +28,8 @@ class User(AbstractUser):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField(_('first name'), max_length=150, blank=True)
+    last_name = models.CharField(_('last name'), max_length=150, blank=True)
 
     def __str__(self):
         return str(self.user)

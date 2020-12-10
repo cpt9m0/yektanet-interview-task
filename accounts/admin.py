@@ -9,7 +9,6 @@ from accounts.models import User, UserProfile, EmployerProfile
 class UserAdmin(DefaultUserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password',)}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name',)}),
         (_('Permissions'), {
             'fields': ('is_active', 'is_employer', 'is_staff', 'is_superuser', 'groups', 'user_permissions',),
         }),
@@ -21,9 +20,9 @@ class UserAdmin(DefaultUserAdmin):
             'fields': ('email', 'password1', 'password2'),
         }),
     )
-    list_display = ('email', 'first_name', 'last_name', 'is_employer',)
+    list_display = ('email', 'is_employer',)
     list_filter = ('is_staff', 'is_employer', 'is_superuser', 'is_active', 'groups',)
-    search_fields = ('first_name', 'last_name', 'email',)
+    search_fields = ('email',)
     ordering = ('email',)
 
 
