@@ -129,3 +129,11 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Custom User
 AUTH_USER_MODEL = 'accounts.User'
+
+# Django Rest Framework Settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}

@@ -4,3 +4,4 @@ djangorestframework==3.12.2
 Markdown==3.3.3
 pytz==2020.4
 sqlparse==0.4.1
+djangorestframework_simplejwt==4.6.0

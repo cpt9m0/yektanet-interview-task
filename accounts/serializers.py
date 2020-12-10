@@ -10,7 +10,8 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['email', 'is_employer', 'userprofile', 'employerprofile', 'password']
         read_only_fields = ['userprofile', 'employerprofile']
         extra_kwargs = {
-            'password': {'write_only': True}
+            'password': {'write_only': True},
+            'is_employer': {'required': True}
         }
 
     def to_representation(self, instance):
