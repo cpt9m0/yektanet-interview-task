@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 from django.utils.translation import ugettext_lazy as _
 
-from accounts.models import User, UserProfile, EmployerProfile
+from accounts.models import User, UserProfile, EmployerProfile, ExpertArea
 
 
 @admin.register(User)
@@ -33,4 +33,9 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 @admin.register(EmployerProfile)
 class EmployerProfileAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(ExpertArea)
+class ExpertAreaAdmin(admin.ModelAdmin):
     pass
