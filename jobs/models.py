@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from accounts.models import EmployerProfile
+from accounts.models import EmployerProfile, UserProfile
 
 
 class OpportunityCategory(models.Model):
@@ -34,3 +34,17 @@ class Opportunity(models.Model):
     class Meta:
         verbose_name = _('opportunity')
         verbose_name_plural = _('opportunities')
+
+
+class OpportunityRequest(models.Model):
+    opportunity = models.ForeignKey(to=Opportunity, on_delete=models.CASCADE, verbose_name=_('opportunity'))
+    user = models.ForeignKey(to=UserProfile, on_delete=models.CASCADE, verbose_name=_('user'))
+
+    request_date = models.DateTimeField(verbose_name=_('requested at'), auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} for {self.opportunity}"
+
+    class Meta:
+        verbose_name = _('Opportunity Request')
+        verbose_name_plural = _('Opportunity Requests')
