@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Apps
     'accounts.apps.AccountsConfig',
+    'jobs.apps.JobsConfig',
     # Third Party Apps
     'rest_framework'
 ]
@@ -122,6 +123,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Custom User
 AUTH_USER_MODEL = 'accounts.User'

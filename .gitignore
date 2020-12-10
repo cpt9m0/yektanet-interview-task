@@ -1,4 +1,6 @@
 /venv/
 /accounts/migrations/
+/jobs/migrations/
 /db.sqlite3
 /.idea
+/media/

@@ -4,6 +4,8 @@ from django.contrib.auth.models import PermissionsMixin
 from django.utils.translation import ugettext_lazy as _
 
 from accounts.managers import UserManager
+from accounts.utils import get_file_path
+from jobs.models import ExpertArea
 
 
 class User(AbstractUser):
@@ -45,6 +47,10 @@ class UserProfile(Profile):
     )
     age = models.PositiveIntegerField(_('age'), blank=True, null=True)
     gender = models.CharField(_('gender'), max_length=6, choices=gender_choices)
+    resume = models.FileField(_('resume'), upload_to=get_file_path, blank=True, null=True)
+    expert_area = models.ManyToManyField(to=ExpertArea, related_name='users', verbose_name=_('expert area'))
+
+    directory_string_var = 'resume_files/'
 
     class Meta:
         verbose_name = _('user profile')
@@ -56,6 +62,7 @@ class EmployerProfile(Profile):
     company_address = models.CharField(_('company address'), max_length=1024, blank=True, null=True)
     company_phone = models.CharField(_('company phone'), max_length=12, blank=True, null=True)
     established_year = models.PositiveIntegerField(_('established year'), blank=True, null=True)
+    expert_area = models.ManyToManyField(to=ExpertArea, related_name='employers', verbose_name=_('expert area'))
 
     class Meta:
         verbose_name = _('employer profile')
