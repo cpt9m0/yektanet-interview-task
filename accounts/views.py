@@ -20,7 +20,6 @@ class UserListAPI(generics.ListAPIView):
 class UserRegisterAPI(generics.CreateAPIView):
     """
     Creates a new user
-    endpoint: /api/v1/accounts/user/
     """
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
@@ -43,6 +42,10 @@ class UserProfileAPI(generics.RetrieveUpdateAPIView):
         return get_object_or_404(self.model_class, pk=self.kwargs.get('pk', -1))
 
     def update(self, request, *args, **kwargs):
+        """
+        Updates both user profile and employer profile with a single api class :)
+        Every user can updates his/her own profile
+        """
         profile_object = self.get_object()
         if profile_object.user == self.request.user:
             return super(UserProfileAPI, self).update(request, *args, **kwargs)

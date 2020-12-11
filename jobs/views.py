@@ -83,6 +83,10 @@ class OpportunityAPI(generics.GenericAPIView):
 
 
 class OpportunityListCreateAPI(generics.ListCreateAPIView):
+    """
+    if authenticated user is an employer this lists his/her defined opportunities
+    else if he/she is an user this lists some opportunities based on his/her expert area
+    """
     permission_classes = [IsAuthenticated, IsEmployerOrReadOnly]
     serializer_class = OpportunitySerializer
 
@@ -106,6 +110,10 @@ class OpportunityListCreateAPI(generics.ListCreateAPIView):
 
 
 class OpportunitySearchListAPI(generics.ListAPIView):
+    """
+    Lists opportunities based in q parameter.
+    This checks titles, descriptions and company names
+    """
     permission_classes = [AllowAny]
     serializer_class = OpportunitySerializer
 
