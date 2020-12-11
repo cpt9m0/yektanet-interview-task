@@ -1,8 +1,9 @@
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
 from rest_framework import generics, status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 from jobs.serializers import OpportunitySerializer
@@ -89,7 +90,30 @@ class OpportunityListCreateAPI(generics.ListCreateAPIView):
         if self.request.user.is_employer:
             return Opportunity.objects.filter(employer__user=self.request.user)
         else:
-            return Opportunity.objects.all()
+            user = self.request.user.userprofile
+            expert_area_list = []
+            user_expert_areas = user.expert_area.values('name')
+            for ea in user_expert_areas:
+                expert_area_list.append(ea['name'])
+            del user_expert_areas
+            recommendations = Opportunity.objects.filter(
+                Q(employer__expert_area__name__in=expert_area_list)
+            ).order_by('employer__expert_area')
+            return recommendations
 
     def perform_create(self, serializer):
         serializer.save(employer=self.request.user.employerprofile)
+
+
+class OpportunitySearchListAPI(generics.ListAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = OpportunitySerializer
+
+    def get_queryset(self):
+        q = self.request.GET.get('q')
+        objects = Opportunity.objects.all()
+        if q:
+            objects = objects.filter(
+                Q(title__contains=q) | Q(description__contains=q) | Q(employer__company_name__contains=q)
+            )
+        return objects
