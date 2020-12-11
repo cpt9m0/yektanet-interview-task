@@ -5,10 +5,10 @@ from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from jobs.serializers import OpportunityRequestSerializer, OpportunitySerializer
+from jobs.serializers import OpportunitySerializer
 from jobs.models import Opportunity, OpportunityRequest
 
-from accounts.permissions import OpportunityPermissions
+from accounts.permissions import OpportunityPermissions, IsEmployerOrReadOnly
 
 
 class OpportunityAPI(generics.GenericAPIView):
@@ -51,6 +51,9 @@ class OpportunityAPI(generics.GenericAPIView):
         )
 
     def put(self, *args, **kwargs):
+        """
+        Edits an opportunity by its employer
+        """
         opportunity = get_object_or_404(Opportunity, pk=self.get_pk())
         if opportunity.employer == self.request.user.employerprofile:
             serializer = self.get_serializer(instance=opportunity, data=self.request.data)
@@ -63,6 +66,9 @@ class OpportunityAPI(generics.GenericAPIView):
             return Response(data={'detail': 'Permission Denied'}, status=status.HTTP_403_FORBIDDEN)
 
     def patch(self, *args, **kwargs):
+        """
+        Partially edits an opportunity by its employer
+        """
         opportunity = get_object_or_404(Opportunity, pk=self.get_pk())
         if opportunity.employer == self.request.user.employerprofile:
             serializer = self.get_serializer(instance=opportunity, data=self.request.data, partial=True)
@@ -73,3 +79,17 @@ class OpportunityAPI(generics.GenericAPIView):
                 return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(data={'detail': 'Permission Denied'}, status=status.HTTP_403_FORBIDDEN)
+
+
+class OpportunityListCreateAPI(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated, IsEmployerOrReadOnly]
+    serializer_class = OpportunitySerializer
+
+    def get_queryset(self):
+        if self.request.user.is_employer:
+            return Opportunity.objects.filter(employer__user=self.request.user)
+        else:
+            return Opportunity.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(employer=self.request.user.employerprofile)

@@ -22,6 +22,8 @@ class OpportunityPermissions(BasePermission):
             return False
 
 
-class IsEmployer(BasePermission):
+class IsEmployerOrReadOnly(BasePermission):
     def has_permission(self, request, view):
+        if request.method == 'GET':
+            return True
         return request.user.is_employer

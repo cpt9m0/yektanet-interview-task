@@ -12,4 +12,5 @@ class OpportunityRequestSerializer(serializers.ModelSerializer):
 class OpportunitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Opportunity
-        exclude = ['id']
+        fields = '__all__'
+        read_only_fields = ['id', 'employer', 'posted_date']

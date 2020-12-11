@@ -23,7 +23,10 @@ class Opportunity(models.Model):
     image = models.FileField(_('image'), upload_to='opportunities/', blank=True, null=True)
     salary = models.PositiveBigIntegerField(_('salary'), blank=True, null=True)
     working_hours = models.IntegerField(_('working hours'), blank=True, null=True)
-    category = models.ManyToManyField(to=OpportunityCategory, related_name='opportunities', verbose_name=_('category'))
+    category = models.ManyToManyField(
+        to=OpportunityCategory, related_name='opportunities',
+        verbose_name=_('category'), blank=True
+    )
 
     expiration_date = models.DateTimeField(_('expiration date'), blank=True, null=True)
     posted_date = models.DateTimeField(_('posted date'), auto_now_add=True)
