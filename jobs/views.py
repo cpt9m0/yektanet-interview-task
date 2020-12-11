@@ -8,12 +8,12 @@ from rest_framework.response import Response
 from jobs.serializers import OpportunityRequestSerializer, OpportunitySerializer
 from jobs.models import Opportunity, OpportunityRequest
 
-from accounts.permissions import IsUserOrReadOnly
+from accounts.permissions import OpportunityPermissions
 
 
 class OpportunityAPI(generics.GenericAPIView):
     serializer_class = OpportunitySerializer
-    permission_classes = [IsUserOrReadOnly]
+    permission_classes = [IsAuthenticated, OpportunityPermissions]
 
     def get_pk(self):
         return self.kwargs.get('pk', -1)
@@ -49,3 +49,27 @@ class OpportunityAPI(generics.GenericAPIView):
             data={'detail': 'Opportunity expired.'},
             status=status.HTTP_400_BAD_REQUEST
         )
+
+    def put(self, *args, **kwargs):
+        opportunity = get_object_or_404(Opportunity, pk=self.get_pk())
+        if opportunity.employer == self.request.user.employerprofile:
+            serializer = self.get_serializer(instance=opportunity, data=self.request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(data=serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(data={'detail': 'Permission Denied'}, status=status.HTTP_403_FORBIDDEN)
+
+    def patch(self, *args, **kwargs):
+        opportunity = get_object_or_404(Opportunity, pk=self.get_pk())
+        if opportunity.employer == self.request.user.employerprofile:
+            serializer = self.get_serializer(instance=opportunity, data=self.request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(data=serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(data={'detail': 'Permission Denied'}, status=status.HTTP_403_FORBIDDEN)
