@@ -22,6 +22,15 @@ class UserSerializer(serializers.ModelSerializer):
             data.pop('employerprofile')
         return data
 
+    def create(self, validated_data):
+        user = User.objects.create(
+            email=validated_data['email'],
+            is_employer=validated_data['is_employer']
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
+
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
